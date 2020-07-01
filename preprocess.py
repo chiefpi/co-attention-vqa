@@ -3,6 +3,7 @@ import json
 import nltk
 
 data_dir = './data'
+idir = './data/images'
 qdir = './data/questions'
 adir = './data/annotations'
 
@@ -30,7 +31,9 @@ def preprocess(split):
                 'question': ' '.join(nltk.word_tokenize(id2q[anno['question_id']])),
                 'answer': anno['multiple_choice_answer']
             }
-            items.append(item)
+            
+            if os.path.exists(os.path.join(os.path.join(idir, split), item['image_name'])):
+                items.append(item)
     
     with open(output_fn, 'w') as f:
         json.dump(items, f)

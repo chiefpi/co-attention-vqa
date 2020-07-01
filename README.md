@@ -22,6 +22,14 @@ Set training parameters in `run.py`.
 python run.py
 ```
 
+## Evaluation
+
+Use official scripts to evaluate results.
+
+```bash
+python eval.py
+```
+
 ## Experiments
 
 Results

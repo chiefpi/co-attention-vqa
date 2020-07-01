@@ -3,6 +3,8 @@ import json
 
 import numpy as np
 from skimage import io
+from skimage.transform import resize
+from skimage.color import gray2rgb
 import torch
 from torch.utils.data import Dataset
 
@@ -34,7 +36,9 @@ class VQADataset(Dataset):
         question = example['question']
         answer = example['answer']
         image_name = os.path.join(os.path.join(os.path.join(self.data_dir, 'images'), self.split), example['image_name'])
-        image = io.imread(image_name)
+        image = resize(io.imread(image_name), (512, 512))
+        if len(image.shape) == 2:
+            image = gray2rgb(image)
 
         return {'question_id': qid, 'image': image, 'question': question, 'answer': answer}
 

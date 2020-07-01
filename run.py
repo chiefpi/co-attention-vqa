@@ -1,6 +1,7 @@
 import os
 import json
 
+from tqdm import tqdm
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -50,13 +51,13 @@ def train_epoch(model, dataset, vocab, criterion, optimizer):
     model.train()
     train_loss = 0
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
-    for batch in dataloader:
+    for batch in tqdm(dataloader):
         optimizer.zero_grad()
-        ibatch = batch['image'].permute(0, 3, 1, 2).to(device)
+        ibatch = batch['image'].permute(0, 3, 1, 2).float().to(device)
         qbatch = token2id(batch['question'], vocab.qvocab).to(device)
         output = model(ibatch, qbatch)
 
-        abatch = answer2id(batch['answer'], vocab.avocab)
+        abatch = answer2id(batch['answer'], vocab.avocab).to(device)
         loss = criterion(output, abatch)
         loss.backward()
         train_loss += loss.item()
@@ -69,13 +70,13 @@ def evaluate_split(model, dataset, vocab, criterion):
     model.eval()
     eval_loss = 0
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
-    for batch in dataloader:
+    for batch in tqdm(dataloader):
         with torch.no_grad():
-            ibatch = batch['image'].permute(0, 3, 1, 2).to(device)
+            ibatch = batch['image'].permute(0, 3, 1, 2).float().to(device)
             qbatch = token2id(batch['question'], vocab.qvocab).to(device)
             output = model(ibatch, qbatch)
 
-            abatch = answer2id(batch['answer'], vocab.avocab)
+            abatch = answer2id(batch['answer'], vocab.avocab).to(device)
             loss = criterion(output, abatch)
             eval_loss += loss.item()
 
@@ -149,7 +150,7 @@ if __name__ == "__main__":
 
     vocab = VQAVocab(data_dir)
 
-    model = CoNet(len(vocab.qvocab), emb_dim, len(vocab.avocab), useco=use_coatt)
+    model = CoNet(len(vocab.qvocab), emb_dim, len(vocab.avocab), useco=use_coatt).to(device)
 
     for name, param in model.named_parameters():
         print(name, param.requires_grad, param.is_cuda, param.size())
