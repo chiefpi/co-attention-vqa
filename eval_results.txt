@@ -1,0 +1,104 @@
+loading VQA annotations and questions into memory...
+0:00:00.399998
+creating index...
+index created!
+Loading and preparing results...     
+DONE (t=0.11s)
+creating index...
+index created!
+computing accuracy
+
+
+Overall Accuracy is: 36.13
+
+Per Question Type Accuracy is the following:
+what color is the : 27.87
+is the : 63.12
+what color is : 20.75
+what is the : 14.09
+are : 62.43
+what number is : 3.77
+what is on the : 13.90
+what is the man : 10.78
+is this : 60.00
+what time : 11.21
+what are : 8.97
+what : 13.36
+what kind of : 14.92
+is there a : 61.45
+does the : 67.29
+are the : 63.92
+is this a : 61.12
+how many : 31.32
+what are the : 9.97
+how : 10.97
+what sport is : 24.56
+what does the : 4.20
+none of the above : 41.15
+is there : 55.61
+which : 22.76
+where is the : 6.16
+is : 62.02
+what is : 8.48
+what is in the : 14.35
+is the man : 62.88
+how many people are : 27.77
+where are the : 8.02
+how many people are in : 24.43
+are there any : 51.70
+what is the person : 9.74
+what animal is : 5.90
+are there : 52.00
+is it : 66.05
+does this : 66.49
+what brand : 22.64
+what color are the : 31.93
+can you : 71.05
+are these : 64.95
+what is the name : 0.00
+who is : 8.98
+is this person : 58.42
+what color : 20.43
+what room is : 36.12
+is the person : 60.20
+was : 61.05
+is he : 64.34
+has : 70.00
+what is this : 12.36
+do : 62.13
+what type of : 14.57
+why : 6.62
+do you : 66.00
+is the woman : 62.23
+is this an : 59.91
+could : 68.79
+is that a : 54.25
+what is the woman : 12.88
+what is the color of the : 24.14
+why is the : 5.76
+are they : 63.05
+
+
+Per Answer Type Accuracy is the following:
+other : 16.72
+yes/no : 64.69
+number : 26.03
+
+
+ground truth answers
+Question: What color is the batters shoes?
+Answer 1: red
+Answer 2: pink
+Answer 3: red
+Answer 4: red
+Answer 5: red
+Answer 6: red
+Answer 7: red
+Answer 8: red
+Answer 9: red
+Answer 10: red
+
+
+generated answer (accuracy 0.00)
+Answer:   black
+

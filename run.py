@@ -23,6 +23,7 @@ feat_dim = 2048
 num_epochs = 30
 patience = 5
 batch_size = 64
+batch_size_eval = 32
 lr = 0.001
 num_workers = 4
 save_dir = './saved_models'
@@ -121,22 +122,22 @@ def train(model, dataset_train, dataset_val, vocab):
 
 def evaluate(model, dataset, vocab):
     results = []
-    model.load(os.path.join(save_dir, '{}-best.pt'.format(task_name))).to(device)
+    model.load(os.path.join(save_dir, '{}-best.pt'.format(task_name)))
+    model = model.to(device)
+    model.eval()
 
-    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
-    for batch in dataloader:
-        idbatch = batch['question_id']
-        ibatch = batch['image'].permute(0, 3, 1, 2).to(device)
-        qbatch = token2id(batch['question'], vocab.qvocab).to(device)
-        output = model(ibatch, qbatch)
-        aids = output.argmax(-1).tolist()
-        answers = id2answer(aids, vocab.avocab)
+    dataloader = DataLoader(dataset, batch_size=batch_size_eval, shuffle=True, num_workers=num_workers)
+    for batch in tqdm(dataloader):
+        with torch.no_grad():
+            idbatch = batch['question_id']
+            ibatch = batch['image'].permute(0, 3, 1, 2).float().to(device)
+            qbatch = token2id(batch['question'], vocab.qvocab).to(device)
+            output = model(ibatch, qbatch)
+            aids = output.argmax(-1).tolist()
+            answers = id2answer(aids, vocab.avocab)
 
-        for i in range(batch_size):
-            results.append({
-                'question_id': idbatch[i],
-                'answer': answers[i]
-            })
+            for qid, answer in zip(idbatch, answers):
+                results.append({'question_id': qid, 'answer': answer})
 
     with open('results.json', 'w') as f:
         json.dump(results, f)
@@ -156,5 +157,5 @@ if __name__ == "__main__":
         print(name, param.requires_grad, param.is_cuda, param.size())
         # assert param.is_cuda
 
-    train(model, dataset_train, dataset_val, vocab)
+#     train(model, dataset_train, dataset_val, vocab)
     evaluate(model, dataset_test, vocab)

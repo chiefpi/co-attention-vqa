@@ -32,5 +32,10 @@ python eval.py
 
 ## Experiments
 
-Results
+Results (4 epochs)
 
+| Model         | All   | Yes/No | Number | Other |
+| ------------- | ----- | ------ | ------ | ----- |
+| Prior         | 25.98 | 61.20  | 00.36  | 01.17 |
+| Language-only | 44.26 | 67.01  | 31.55  | 27.37 |
+| CoNet         | 36.13 | 64.69  | 26.03  | 16.72 |

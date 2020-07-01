@@ -1,3 +1,4 @@
 data/*
 logs/*
+results.json
 __pycache__
