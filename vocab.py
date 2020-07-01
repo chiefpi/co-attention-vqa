@@ -1,7 +1,6 @@
 """Build vocabulary for questions and answers."""
 import os
 import json
-import nltk
 
 class Vocab(object):
     def __init__(self):
@@ -32,7 +31,7 @@ class VQAVocab(object):
         qtokens = []
         atokens = []
         for ex in examples:
-            qtokens += nltk.word_tokenize(ex['question'])
+            qtokens += ex['question'].split()
             atokens.append(ex['answer']) # No split
         for token in qtokens:
             self.qvocab.add_token(token)

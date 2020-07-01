@@ -1,5 +1,6 @@
 import os
 import json
+import nltk
 
 data_dir = './data'
 qdir = './data/questions'
@@ -26,7 +27,7 @@ def preprocess(split):
                 'image_id': anno['image_id'],
                 'image_name': 'COCO_{}2014_{:012d}.jpg'.format(split_name, anno['image_id']),
                 'question_id': anno['question_id'],
-                'question': id2q[anno['question_id']],
+                'question': ' '.join(nltk.word_tokenize(id2q[anno['question_id']])),
                 'answer': anno['multiple_choice_answer']
             }
             items.append(item)

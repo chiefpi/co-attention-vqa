@@ -1,4 +1,5 @@
 """Modified from torchvision resnet."""
+import math
 
 import torch
 import torch.nn as nn
@@ -106,7 +107,7 @@ class Bottleneck(nn.Module):
 
 class ResNet(nn.Module):
 
-    def __init__(self, block, layers, num_classes=1000, zero_init_residual=False,
+    def __init__(self, block, layers, num_feats, zero_init_residual=False,
                  groups=1, width_per_group=64, replace_stride_with_dilation=None,
                  norm_layer=None):
         super(ResNet, self).__init__()
@@ -137,8 +138,9 @@ class ResNet(nn.Module):
                                        dilate=replace_stride_with_dilation[1])
         self.layer4 = self._make_layer(block, 512, layers[3], stride=2,
                                        dilate=replace_stride_with_dilation[2])
-        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-        self.fc = nn.Linear(512 * block.expansion, num_classes)
+        num_feats_sqrt = int(math.sqrt(num_feats))
+        self.avgpool = nn.AdaptiveAvgPool2d((num_feats_sqrt, num_feats_sqrt))
+        # self.fc = nn.Linear(512 * block.expansion, num_classes)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -194,8 +196,7 @@ class ResNet(nn.Module):
         x = self.layer4(x)
 
         x = self.avgpool(x)
-        x = torch.flatten(x, 1)
-        x = self.fc(x)
+        x = x.reshape(x.size(0), x.size(1), -1).transpose(1, 2) # N x F x D
 
         return x
 
@@ -203,16 +204,13 @@ class ResNet(nn.Module):
         return self._forward_impl(x)
 
 
-def resnet152(num_classes, path=None, device=None):
-    model = ResNet(Bottleneck, [3, 8, 36, 3], num_classes)
-    if path is not None:
-        model.load_state_dict(torch.load(path, map_location=device))
+def resnet152(num_feats):
+    return ResNet(Bottleneck, [3, 8, 36, 3], num_feats)
 
-    return model
+def resnet50(num_feats):
+    return ResNet(Bottleneck, [3, 4, 6, 3], num_feats)
 
-def resnet50(num_classes, path=None, device=None):
-    model = ResNet(Bottleneck, [3, 4, 6, 3], num_classes)
-    if path is not None:
-        model.load_state_dict(torch.load(path, map_location=device))
-
-    return model
+if __name__ == "__main__":
+    net = resnet50(64)
+    x = torch.randn(4,3,400,600)
+    print(net(x).size()) # 4 x 64 x 2048
