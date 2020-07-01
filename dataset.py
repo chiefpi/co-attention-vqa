@@ -30,12 +30,13 @@ class VQADataset(Dataset):
             idx = idx.tolist()
 
         example = self.examples[idx]
+        qid = example['question_id'] # For evaluation
         question = example['question']
         answer = example['answer']
-        image_name = os.path.join(os.path.join(self.data_dir, self.split), example['image_name'])
+        image_name = os.path.join(os.path.join(os.path.join(self.data_dir, 'images'), self.split), example['image_name'])
         image = io.imread(image_name)
 
-        return {'image': image, 'question': question, 'answer': answer}
+        return {'question_id': qid, 'image': image, 'question': question, 'answer': answer}
 
 
 if __name__ == "__main__":
@@ -44,8 +45,8 @@ if __name__ == "__main__":
     dataset = VQADataset('./data', 'val')
     print(len(dataset))
 
-    dataloader = DataLoader(dataset, batch_size=4, shuffle=True, num_workers=4)
+    dataloader = DataLoader(dataset, batch_size=2, shuffle=False, num_workers=4)
     for i, batch in enumerate(dataloader):
-        print(i, batch['question'], batch['answer'])
-        if i == 5:
+        print(i, batch['image'].size(), batch['question'], batch['answer'])
+        if i == 3:
             break

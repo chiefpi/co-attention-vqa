@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from resnet import resnet50
-from attention import CoAttention
+from model.resnet import resnet50
+from model.attention import CoAttention
 
 
 class CoNet(nn.Module):

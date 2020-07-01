@@ -2,10 +2,13 @@
 import os
 import json
 
+PAD_TOK = '<pad>' # PAD_ID = 0
+
 class Vocab(object):
     def __init__(self):
         self.id2token = []
         self.token2id = {}
+        self.add_token(PAD_TOK)
 
     def __len__(self):
         return len(self.id2token)
