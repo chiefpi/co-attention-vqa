@@ -129,7 +129,7 @@ def evaluate(model, dataset, vocab):
     dataloader = DataLoader(dataset, batch_size=batch_size_eval, shuffle=True, num_workers=num_workers)
     for batch in tqdm(dataloader):
         with torch.no_grad():
-            idbatch = batch['question_id']
+            idbatch = batch['question_id'].tolist()
             ibatch = batch['image'].permute(0, 3, 1, 2).float().to(device)
             qbatch = token2id(batch['question'], vocab.qvocab).to(device)
             output = model(ibatch, qbatch)
